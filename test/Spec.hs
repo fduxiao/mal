@@ -1,2 +1,5 @@
+import Test.Hspec
+import NumberSpec
+
 main :: IO ()
-main = putStrLn "Test suite not yet implemented"
+main = hspec $ context "number" testNumber

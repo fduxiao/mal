@@ -1,12 +1,13 @@
-module Repl
-    ( repl
-    , liftIO
-    ) where
+module Repl(
+    repl, 
+    liftIO
+) where
 
 import Reader
-import Eval
 import Mal
 import Control.Monad.IO.Class
 
 repl :: String -> IO ()
-repl = putStrLn . readForm . eval
+repl line =  putStrLn $ case parse readForm "stdin" line of
+    Right r -> show r
+    Left e -> show e
