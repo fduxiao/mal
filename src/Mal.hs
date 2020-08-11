@@ -45,6 +45,14 @@ data MalValue = Nil
         body :: [MalValue] -> MalEval MalValue
     }
 
+instance Eq MalValue where
+    Nil == Nil = True
+    MalRational a == MalRational b = a == b
+    MalBool a == MalBool b = a == b
+    MalFloat a == MalFloat b = a == b
+    MalString a == MalString b = a == b
+    _ == _ = False
+
 instance Show MalValue where
     show Nil = "nil"
     show (MalRational r) = show (numerator r) ++ case denominator r of
@@ -59,9 +67,10 @@ instance Show MalValue where
     show (MalFunc (Just name) params (Just ast)  _) = "(def!" ++ name ++ "(fn* " ++ show params ++ show ast ++ ")" ++ ")"
     show (MalFunc Nothing params (Just ast)  _) = "(fn* " ++ show params ++ show ast ++ ")"
 
-data MalAST = Value SourcePos MalValue | Var SourcePos String | Call SourcePos [MalAST]
+data MalAST = Value MalValue | Var String | Call [MalAST] | At SourcePos MalAST deriving Eq
 
 instance Show MalAST where
-    show (Value _ v) = show v 
-    show (Var _ s) = s  -- a symbol is just represented in REPL as the name
-    show (Call _ args) = "(" ++ joinList args ++ ")"
+    show (Value v) = show v 
+    show (Var s) = s  -- a symbol is just represented in REPL as the name
+    show (Call args) = "(" ++ joinList args ++ ")"
+    show (At pos ast) = show ast ++ " @" ++ show pos

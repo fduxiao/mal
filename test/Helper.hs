@@ -1,11 +1,13 @@
 module Helper (
     module Helper,
     module Test.Hspec,
-    module Lexer
+    module Lexer,
+    newPos
 ) where
 
 import Test.Hspec
 import Lexer
+import Text.Parsec.Pos(newPos)
 
 as :: (a -> b) -> a -> b
 as = ($)

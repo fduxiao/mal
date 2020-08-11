@@ -1,5 +1,9 @@
 import Test.Hspec
+
 import NumberSpec
+import ParserSpec
 
 main :: IO ()
-main = hspec $ context "number" testNumber
+main = do
+    hspec $ context "number" testNumber
+    hspec $ context "parser" testParser

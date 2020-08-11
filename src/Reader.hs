@@ -1,17 +1,21 @@
 module Reader (
     module Reader, 
     parse, 
-    Parser
+    Parser,
+    module Mal,
 ) where
 
 import Mal
 import Lexer
 import Data.Char(isDigit)
 
+atPos :: Parser MalAST -> Parser MalAST
+atPos p = do
+    pos <- getPosition 
+    At pos <$> p
+
 value :: Parser MalValue -> Parser MalAST
-value p = do
-    pos <- getPosition
-    Value pos <$> p
+value p = atPos $ Value <$> p
 
 readNumber :: Parser MalAST
 readNumber = value $ try (MalFloat <$> float)
@@ -31,25 +35,20 @@ readFalse :: Parser MalAST
 readFalse = value $ literal "false" (MalBool False)
 
 readCall :: Parser MalAST
-readCall = do
-    pos <- getPosition 
-    parens $ Call pos <$> many readForm
+readCall = atPos $ parens $ Call <$> many readForm
 
 readVar :: Parser MalAST
-readVar = do
-    pos <- getPosition
-    Var pos <$> malVar
+readVar = atPos $ Var <$> malVar
 
 readValue :: Parser MalAST
 readValue = do
-    pos <- getPosition
     ch <- lookAhead anyChar
     case ch of
         '"' -> readString
         '.' -> readNumber
         '-' -> readNumber
         _ | isDigit ch -> readNumber
-        _ -> readVar
+        _ -> try readNil <|> try readTrue <|> try readFalse <|> readVar
 
 readForm :: Parser MalAST
 readForm = do

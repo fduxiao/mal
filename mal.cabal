@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: cda8a77ec18f8d8c0e4bcb24e887b8fe222493875aa27b9a2a7952670be728ff
+-- hash: 55a5efba8f4ae7c4cda51a8a211e20b438c908713565356e2dfcb557d0991082
 
 name:           mal
 version:        0.1.0.0
@@ -68,8 +68,9 @@ test-suite mal-test
   main-is: Spec.hs
   other-modules:
       Helper
-      Mal
+      MalSpec
       NumberSpec
+      ParserSpec
       Paths_mal
   hs-source-dirs:
       test
